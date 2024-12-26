@@ -5,8 +5,9 @@
   </div>
 
   <!-- Loading Spinner Below the Button -->
-  <div *ngIf="loading" class="loading">
-    <mat-spinner></mat-spinner>
+  <!-- We use isLoading to conditionally show the custom spinner -->
+  <div *ngIf="isLoading" class="loading">
+    <app-loading-spinner></app-loading-spinner>
   </div>
 
   <mat-divider></mat-divider>
@@ -15,7 +16,7 @@
   <div *ngIf="error" class="error">{{ error }}</div>
 
   <!-- Message When No Users Are Loaded -->
-  <div *ngIf="!users.length && !loading"><h2>No users currently loaded.</h2></div>
+  <div *ngIf="!users.length && !isLoading"><h2>No users currently loaded.</h2></div>
 
   <!-- User List -->
   <div *ngIf="users.length" class="user-list">

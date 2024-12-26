@@ -2,11 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { MatButtonModule } from '@angular/material/button';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCardModule } from '@angular/material/card';
 import { UserService } from '../user.service';
 import { MatDivider } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
+
+// Import the new spinner component
+import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-user-list',
@@ -15,39 +17,41 @@ import { MatIconModule } from '@angular/material/icon';
     CommonModule,
     HttpClientModule,
     MatButtonModule,
-    MatProgressSpinnerModule,
     MatCardModule,
     MatDivider,
     MatIconModule,
+
+    // Include your LoadingSpinnerComponent so you can use <app-loading-spinner> in HTML
+    LoadingSpinnerComponent
   ],
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.css'],
 })
 export class UserListComponent implements OnInit {
   users: any[] = [];
-  loading = false;
+  isLoading = false;  // renamed to isLoading
   error: string | null = null;
 
   constructor(private userService: UserService) {}
 
   ngOnInit(): void {
+    // Optionally load users on init:
     this.loadUsers();
   }
 
   loadUsers(): void {
-    this.loading = true;
+    this.isLoading = true;
     this.error = null;
 
-  
     this.userService.fetchUsers().subscribe(
       (response) => {
         this.users = response.results;
-        this.loading = false;
+        this.isLoading = false;
       },
       (err) => {
         console.error('Error loading users:', err);
         this.error = 'Failed to load users. Please try again.';
-        this.loading = false;
+        this.isLoading = false;
       }
     );
   }

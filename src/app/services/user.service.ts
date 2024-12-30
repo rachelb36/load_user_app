@@ -3,14 +3,18 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root', // Makes this service available throughout the app
+  providedIn: 'root',
 })
 export class UserService {
   private apiUrl = 'https://randomuser.me/api'; // API endpoint
 
   constructor(private http: HttpClient) {}
 
-  // Method to fetch users
+  /**
+   * Fetches a specific number of users from the API.
+   * @param count - The number of users to fetch
+   * @returns Observable containing user data
+   */
   getUsers(count: number = 10): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/?results=${count}`).pipe(
       catchError((error) => {

@@ -3,12 +3,11 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { UserService } from '../user.service';
-import { MatDivider } from '@angular/material/divider';
+import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
-
-// Import the new spinner component
 import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.component';
+import { UserService } from '../services/user.service';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-user-list',
@@ -18,45 +17,65 @@ import { LoadingSpinnerComponent } from '../loading-spinner/loading-spinner.comp
     HttpClientModule,
     MatButtonModule,
     MatCardModule,
-    MatDivider,
+    MatDividerModule,
     MatIconModule,
-
-    // Include your LoadingSpinnerComponent so you can use <app-loading-spinner> in HTML
-    LoadingSpinnerComponent
+    LoadingSpinnerComponent,
   ],
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.css'],
+  animations: [
+    trigger('fadeOutAnimation', [
+      state('in', style({ opacity: 1 })),
+    
+
+      transition(':leave', [
+        animate('750ms', style({ opacity: 0 })),
+      ]),
+    ]),
+  ],
 })
 export class UserListComponent implements OnInit {
-  users: any[] = [];
-  isLoading = false;  // renamed to isLoading
-  error: string | null = null;
+  users: any[] = []; // Array to store user data
+  isLoading = false; // Indicates if data is being loaded
+  error: string | null = null; // Stores error messages if any
 
   constructor(private userService: UserService) {}
 
+  // Called on component initialization
   ngOnInit(): void {
-    // Optionally load users on init:
-    this.loadUsers();
+    this.loadUsers(); // Load initial users
   }
 
+  /**
+   * Fetches new users from the API and appends them to the existing list.
+   */
   loadUsers(): void {
-    this.isLoading = true;
-    this.error = null;
+    this.isLoading = true; // Show loading spinner
+    this.error = null; // Clear previous errors
 
-    this.userService.fetchUsers().subscribe(
-      (response) => {
-        this.users = response.results;
-        this.isLoading = false;
+    this.userService.getUsers(10).subscribe(
+      (response: { results: any[] }) => {
+        const newUsers = response.results.map((user: any) => ({
+          ...user,
+          removed: false, // Property to handle animations (if any)
+        }));
+        this.users = [...this.users, ...newUsers]; // Append new users to the list
+        this.isLoading = false; // Hide loading spinner
       },
-      (err) => {
+      (err: any) => {
         console.error('Error loading users:', err);
-        this.error = 'Failed to load users. Please try again.';
-        this.isLoading = false;
+        this.error = 'Failed to load users. Please try again.'; // Set error message
+        this.isLoading = false; // Hide loading spinner
       }
     );
   }
 
+  
+  //  Removes a user from the list by index
+
   removeUser(index: number): void {
-    this.users.splice(index, 1);
+    if (index >= 0 && index < this.users.length) {
+      this.users.splice(index, 1); // Remove user from the array
+    }
   }
 }

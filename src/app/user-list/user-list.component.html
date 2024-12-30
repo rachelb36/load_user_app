@@ -4,8 +4,7 @@
     <button class="load-button" (click)="loadUsers()">Load Users</button>
   </div>
 
-  <!-- Loading Spinner Below the Button -->
-  <!-- We use isLoading to conditionally show the custom spinner -->
+  <!-- Loading Spinner -->
   <div *ngIf="isLoading" class="loading">
     <app-loading-spinner></app-loading-spinner>
   </div>
@@ -18,25 +17,30 @@
   <!-- Message When No Users Are Loaded -->
   <div *ngIf="!users.length && !isLoading"><h2>No users currently loaded.</h2></div>
 
-  <!-- User List -->
+  <!-- User List --> 
   <div *ngIf="users.length" class="user-list">
-    <div *ngFor="let user of users; let i = index" class="user-card">
+    <div *ngFor="let user of users; let i = index" class="user-card" @fadeOutAnimation>
       <button mat-icon-button (click)="removeUser(i)" class="remove_icon">
-        <span class="material-icons">cancel</span>
+        <mat-icon>cancel</mat-icon>
       </button>
       <mat-card>
         <mat-card-content class="card-data">
+          <!-- User Image -->
           <div class="image-container">
             <img class="user-image" mat-card-image [src]="user.picture.large" alt="User Image" />
           </div>
+
+          <!-- User Info -->
           <div class="info-column">
             <p>{{ user.name.last }}, {{ user.name.first }}</p>
             <p>Email: {{ user.email }}</p>
             <p>Phone: {{ user.phone }}</p>
           </div>
+
+          <!-- Additional Info -->
           <div class="info-column">
             <p>Cell: {{ user.cell }}</p>
-            <p>DOB: {{ user.dob.date | date }}</p>
+            <p>DOB: {{ user.dob.date | date:'mediumDate' }}</p>
           </div>
         </mat-card-content>
       </mat-card>

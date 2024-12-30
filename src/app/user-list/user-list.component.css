@@ -106,17 +106,24 @@ h1 {
 .info-column {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: left;
 }
 
 /* On smaller screens, stack columns vertically */
-@media (max-width: 600px) {
+@media (max-width: 850px) {
   .card-data {
-    flex-direction: column;
+    /* flex-direction: column; */
+    display: block;
     align-items: left;
     margin: 0 auto;
   }
+  .info-column p {
+    margin: 0;
+    padding: 0px;
+    align-items: left;
+  }
 }
+
 
 .remove_icon {
     position: absolute;

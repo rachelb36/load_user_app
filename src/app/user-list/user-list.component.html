@@ -17,9 +17,13 @@
   <!-- Message When No Users Are Loaded -->
   <div *ngIf="!users.length && !isLoading"><h2>No users currently loaded.</h2></div>
 
-  <!-- User List --> 
+  <!-- User List -->
   <div *ngIf="users.length" class="user-list">
-    <div *ngFor="let user of users; let i = index" class="user-card" @fadeOutAnimation>
+    <div
+      *ngFor="let user of users; let i = index"
+      class="user-card"
+      [@fadeOutAnimation]="'in'" 
+    >
       <button mat-icon-button (click)="removeUser(i)" class="remove_icon">
         <mat-icon>cancel</mat-icon>
       </button>
@@ -27,7 +31,12 @@
         <mat-card-content class="card-data">
           <!-- User Image -->
           <div class="image-container">
-            <img class="user-image" mat-card-image [src]="user.picture.large" alt="User Image" />
+            <img
+              class="user-image"
+              mat-card-image
+              [src]="user.picture.large"
+              alt="User Image"
+            />
           </div>
 
           <!-- User Info -->
@@ -40,7 +49,7 @@
           <!-- Additional Info -->
           <div class="info-column">
             <p>Cell: {{ user.cell }}</p>
-            <p>DOB: {{ user.dob.date | date:'mediumDate' }}</p>
+            <p>DOB: {{ user.dob.date | date: 'mediumDate' }}</p>
           </div>
         </mat-card-content>
       </mat-card>
